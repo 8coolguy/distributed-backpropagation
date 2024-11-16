@@ -14,13 +14,14 @@ class Layer{
 private:
 	double *_weights;
 	double *_outputs;
-	Activation_Function _activation_function;
+	Activation_Function* _activation_function;
 	double _bias;
 public:
 	int input_dim;
 	int output_dim;
-	Layer(int input_dim, int output_dim, double intial_weight, Activation_Function activation_function, double intial_bias);
-	void forward(double&inputs);
-	void backward(double& outputs);
+	double *outputs;
+	Layer(int input_dim, int output_dim, double initial_weight, Activation_Function *activation_function, double intial_bias);
+	void forward(double* inputs);
+	void backward(double* outputs);
 };
 # endif

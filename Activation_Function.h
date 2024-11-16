@@ -18,7 +18,7 @@ public:
 
 	virtual double derivative(double x) = 0;
 };
-class Sigmoid:Activation_Function {
+class Sigmoid: public Activation_Function {
 public:
 	double evaluate(double x){
 		double exp = std::exp(-x) + 1;

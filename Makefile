@@ -5,7 +5,7 @@ PROG		= main
 PROG_GEN	= generate
 
 all:
-	$(CXX) main.cpp -o $(PROG)
+	$(CXX) test.cpp -o $(PROG) Layer.cpp
 	$(CXX) generate_data.cpp -o $(PROG_GEN)
 clean:
 	$(RM) $(PROG) $(PROG_GEN)
