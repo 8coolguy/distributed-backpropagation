@@ -6,8 +6,9 @@
  * be able to set the bias and also initalize the weights.
  *
  */ 
+#include "Activation_Function.h"
 
-# infdef LAYER_H
+# ifndef LAYER_H
 # define LAYER_H
 class Layer{
 private:
@@ -21,5 +22,5 @@ public:
 	Layer(int input_dim, int output_dim, double intial_weight, Activation_Function activation_function, double intial_bias);
 	void forward(double&inputs);
 	void backward(double& outputs);
-}
+};
 # endif
