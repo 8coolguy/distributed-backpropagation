@@ -1,4 +1,4 @@
-# Distrubuted Backpropagation
+# Distributed Backpropagation
 
 ## Steps   
 1. Create serial backpropagtion.
