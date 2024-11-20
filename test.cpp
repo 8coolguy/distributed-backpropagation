@@ -19,15 +19,18 @@ int main(void){
 	double b[1] = { 2 };
 	a.forward(b);
 	a.backward(b, &cost, .1);
+	a.info();
 	a.forward(b);
 	a.backward(b, &cost, .1);
+	a.info();
 	a.forward(b);
 	a.backward(b, &cost, .1);
+	a.info();
 	a.forward(b);
 	a.backward(b, &cost, .1);
+	a.info();
 	a.forward(b);
-	a.backward(b, &cost, .1);
-
+	a.info();
 
 }
 

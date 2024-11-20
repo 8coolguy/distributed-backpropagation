@@ -44,3 +44,17 @@ void Layer::backward(double* actual_outputs, Cost_Function *f, double learning_r
 		}
 	}
 }
+void Layer::info(){
+	std::cout << "Weights" << std::endl;
+	for(int row = 0; row < output_dim; row++){
+		for(int col = 0; col < input_dim; col++){
+			int index = row * input_dim + col;
+			std::cout << _weights[index] << "\t";
+		}
+		std::cout << std::endl;
+	}
+	std::cout << "Outputs" << std::endl;
+	for(int i = 0; i < output_dim; i++){
+		std::cout << _outputs[i] << std::endl;
+	}
+}

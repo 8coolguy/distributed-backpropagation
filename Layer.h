@@ -25,5 +25,6 @@ public:
 	Layer(int input_dim, int output_dim, double initial_weight, Activation_Function *activation_function, double intial_bias);
 	void forward(double* inputs);
 	void backward(double* outputs, Cost_Function *f, double learning_rate);
+	void info();
 };
 # endif
