@@ -17,14 +17,15 @@ private:
 	double *_intermediate;
 	double *_outputs;
 	Activation_Function* _activation_function;
-	double _bias;
+	double *_bias;
 public:
 	int input_dim;
 	int output_dim;
 	double *outputs;
-	Layer(int input_dim, int output_dim, double initial_weight, Activation_Function *activation_function, double intial_bias);
+	Layer(int input_dim, int output_dim, Activation_Function *activation_function);
 	void forward(double* inputs);
 	void backward(double* outputs, Cost_Function *f, double learning_rate);
 	void info();
+    double *getOutput();
 };
 # endif
