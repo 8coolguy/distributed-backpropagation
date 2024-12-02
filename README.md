@@ -14,6 +14,11 @@ Made a class to create activation functions. They have to inherir the Activation
 ## Serial Back Propagation   
 Created a Layer class that will store the weights from layer i of size n to layer of j size m. Will do more work to implment the how inital weights are created.
 
+## Usage
+1. Run "make"
 
+2. Run "./generate <count> <file_name>" to create a sample dataset
+
+3. 
 
 

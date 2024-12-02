@@ -6,7 +6,7 @@
 using namespace std;
 
 double calculateEquation(double x) {
-    return x * 5.0 + 5.0;
+    return x * 0.5 + 0.3;
 }
 
 int main(int argc, char *argv[]) {
