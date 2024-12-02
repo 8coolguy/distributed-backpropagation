@@ -17,8 +17,15 @@ Created a Layer class that will store the weights from layer i of size n to laye
 ## Usage
 1. Run "make"
 
-2. Run "./generate <count> <file_name>" to create a sample dataset
+2. Run "./generate <count> <file_name> <num_inputs> <num_outputs>" to create a sample dataset.
 
-3. 
+3. Run "./main <file_name>" to train a neural network on the sample dataset or a given input file.
 
+The Makefile also compiles test programs which can be run "./test", "./test2", and "./testnn" to test the layer program and neural network program.
 
+The input file structure starts with the number of inputs and outputs and then the data points, ex:
+2 1
+0.68 0.41 0.64
+0.05 0.37 0.325
+...
+0.9 0.04 0.75
