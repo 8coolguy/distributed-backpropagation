@@ -29,6 +29,8 @@ int main(void){
     cout << "IN: " << in[0] << ", OUT: " << out[0] << endl;
     
     for (int iteration = 1; iteration <= 50; iteration++) {
+        std::cout << "-------" << std::endl;
+        std::cout << "Iteration " << iteration << std::endl;
         a.forward(in);
     	a.backward(out, &cost, learning_rate);
     	a.info();
