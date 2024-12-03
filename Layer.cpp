@@ -40,14 +40,12 @@ void Layer::forward(double* inputs){
 void Layer::backward(double* actual_outputs, double* activations, Cost_Function *f, double learning_rate, bool final_layer){
     double output_derivatives[output_dim];
     double intermediate_gradient[output_dim];
-
+    for (int i = 0; i < output_dim; i++) {
+	output_derivatives[i] = f->derivative(actual_outputs[i], _outputs[i]);
+	intermediate_gradient[i] = _activation_function->derivative(_intermediate[i]);
+	_error_term[i] = 0;
+    }
     if(final_layer) {
-	    for (int i = 0; i < output_dim; i++) {
-		output_derivatives[i] = f->derivative(actual_outputs[i], _outputs[i]);
-		intermediate_gradient[i] = _activation_function->derivative(_intermediate[i]);
-		_error_term[i] = 0;
-	    }
-
 	    for (int row = 0; row < output_dim; row++) {
 		for (int col = 0; col < input_dim; col++) {
 		    int index = row * input_dim + col;
@@ -58,16 +56,13 @@ void Layer::backward(double* actual_outputs, double* activations, Cost_Function 
 		_bias[row] -= learning_rate * output_derivatives[row]; 
 	    }
     }else{
-	    for (int i = 0; i < output_dim; i++) {
-		intermediate_gradient[i] = _activation_function->derivative(_intermediate[i]);
-		_error_term[i] = 0;
-	    }
 	    for (int row = 0; row < output_dim; row++) {
 		for (int col = 0; col < input_dim; col++) {
 		    int index = row * input_dim + col;
 		    _error_term[row] += _weights[index];
 		    _weights[index] -= learning_rate * activations[col] * actual_outputs[row] * intermediate_gradient[row]; 
 		}
+		//acutal outputs is actually just the error term carried over from next layer
 		_error_term[row] = actual_outputs[row] * intermediate_gradient[row] * _error_term[row];
 		_bias[row] -= learning_rate * actual_outputs[row];
 	    }
