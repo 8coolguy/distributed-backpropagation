@@ -9,6 +9,7 @@
 #include <fstream>
 #include <vector>
 #include <sstream>
+#include <chrono>
 
 #include "Neural_Network.h"
 #include "Activation_Function.h"
@@ -69,11 +70,12 @@ int main(int argc, char* argv[]) {
     nn.addLayer(new Layer(numInputs, 5, &activationFunction));
     nn.addLayer(new Layer(5, numOutputs, &activationFunction));
 
+
     // Train the network
     int epochs = 50;
     for (int epoch = 1; epoch <= epochs; ++epoch) {
         double totalLoss = 0.0;
-
+    	double total_time = 0.0;
         for (size_t i = 0; i < inputs.size(); ++i) {
             nn.forward(inputs[i]);
 
@@ -81,11 +83,14 @@ int main(int argc, char* argv[]) {
             for (int j = 0; j < numOutputs; ++j) {
                 totalLoss += costFunction.evaluate(outputs[i][j], predicted[j]);
             }
-
+	    auto t1 = std::chrono::high_resolution_clock::now();
             nn.backward(inputs[i], outputs[i], &costFunction);
+	    auto t2 = std::chrono::high_resolution_clock::now();
+	    std::chrono::duration<double> duration = t2 - t1;
+	    total_time += duration.count();
         }
 
-        cout << "Epoch " << epoch << ", Loss: " << totalLoss / inputs.size() << endl;
+        cout << "Epoch " << epoch << ", Loss: " << totalLoss / inputs.size() << "Total time in Backpropagation " << total_time / inputs.size() << "s" <<  endl;
     }
 
     // Test the network
