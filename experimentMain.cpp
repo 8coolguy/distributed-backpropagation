@@ -69,18 +69,19 @@ int main(int argc, char* argv[]) {
     cout << "Finished processing file: " << fileName << endl;
 
     // Initialize the neural network
-    Sigmoid activationFunction; 
+    Sigmoid sigmoidActivation;
+    ReLU reluActivation;
     SE costFunction;
     NeuralNetwork nn(0.1);
 
     // Add layers to the network
-    nn.addLayer(new Layer(numInputs, numNodesPerLayer, &activationFunction));
+    nn.addLayer(new Layer(numInputs, numNodesPerLayer, &reluActivation));
 
     for (int i = 0; i < numLayers - 3; ++i) {
-        nn.addLayer(new Layer(numNodesPerLayer, numNodesPerLayer, &activationFunction));
+        nn.addLayer(new Layer(numNodesPerLayer, numNodesPerLayer, &reluActivation));
     }
     
-    nn.addLayer(new Layer(numNodesPerLayer, numOutputs, &activationFunction));
+    nn.addLayer(new Layer(numNodesPerLayer, numOutputs, &sigmoidActivation));
 
     // Train the network and log content
     ofstream logStream("log.txt");

@@ -61,13 +61,14 @@ int main(int argc, char* argv[]) {
     cout << "Finished processing file: " << fileName << endl;
 
     // Initialize the neural network
-    Sigmoid activationFunction; 
+    Sigmoid sigmoidActivation;
+    ReLU reluActivation; 
     SE costFunction;
     NeuralNetwork nn(0.1);
 
     // Add layers to the network
-    nn.addLayer(new Layer(numInputs, 5, &activationFunction));
-    nn.addLayer(new Layer(5, numOutputs, &activationFunction));
+    nn.addLayer(new Layer(numInputs, 5, &reluActivation));
+    nn.addLayer(new Layer(5, numOutputs, &sigmoidActivation));
 
     // Train the network
     int epochs = 50;
