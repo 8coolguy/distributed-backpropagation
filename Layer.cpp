@@ -29,8 +29,9 @@ Layer::Layer(int input_dim, int output_dim, Activation_Function* activation_func
         }
 }
 void Layer::forward(double* inputs){
+    	#pragma omp for 
 	for(int row = 0; row < output_dim; row++){
-        _intermediate[row] = _bias[row];
+        	_intermediate[row] = _bias[row];
 		for(int col = 0; col < input_dim; col++){
 			int index = row * input_dim + col;
 			_intermediate[row] += _weights[index] * inputs[col];
