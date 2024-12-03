@@ -23,7 +23,7 @@ void NeuralNetwork::backward(double* input, double* actual_output, Cost_Function
 	if (i == 0) activations = input;
 	else activations = layers[i - 1]->getOutput();
         if (i == layers.size() - 1) layers[i]->backward(current_gradients, activations, cost_function, learning_rate, true);
-	else layers[i]->backward(layers[i + 1]->get_error_term(), activations, cost_function, learning_rate, true);
+	else layers[i]->backward(current_gradients, activations, cost_function, learning_rate, false );
         current_gradients = layers[i]->get_error_term();
     }
 }
