@@ -14,6 +14,6 @@ all:
 	$(CXX) test2.cpp -o $(PROG_2) Layer.cpp -fopenmp
 	$(CXX) testnn.cpp -o $(PROG_NN) Layer.cpp Neural_Network.cpp -fopenmp
 	$(CXX) generate_data.cpp -o $(PROG_GEN)
-	$(CXX) experimentMain.cpp -o $(EXPERIMENT) Layer.cpp Neural_Network.cpp
+	$(CXX) experimentMain.cpp -o $(EXPERIMENT) Layer.cpp Neural_Network.cpp -fopenmp
 clean:
 	$(RM) $(MAIN) $(PROG) $(PROG_2) $(PROG_NN) $(PROG_GEN) $(EXPERIMENT)

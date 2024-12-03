@@ -29,9 +29,9 @@ Layer::Layer(int input_dim, int output_dim, Activation_Function* activation_func
         }
 }
 void Layer::forward(double* inputs){
-    	#pragma omp for 
+    #pragma omp simd
 	for(int row = 0; row < output_dim; row++){
-        	_intermediate[row] = _bias[row];
+        _intermediate[row] = _bias[row];
 		for(int col = 0; col < input_dim; col++){
 			int index = row * input_dim + col;
 			_intermediate[row] += _weights[index] * inputs[col];
@@ -42,20 +42,20 @@ void Layer::forward(double* inputs){
 void Layer::backward(double* actual_outputs, double* activations, Cost_Function *f, double learning_rate, bool final_layer){
     double output_derivatives[output_dim];
     double intermediate_gradient[output_dim];
+    
     #pragma omp parallel for num_threads(_num_threads)
     for (int row = 0; row < output_dim; row++) {
-	if (final_layer) output_derivatives[row] = f->derivative(actual_outputs[row], _outputs[row]);
-	else output_derivatives[row] = actual_outputs[row];
-	intermediate_gradient[row] = _activation_function->derivative(_intermediate[row]);
-	_error_term[row] = 0;
-	#pragma omp parallel for num_threads(_num_threads)
-	for (int col = 0; col < input_dim; col++) {
-	    int index = row * input_dim + col;
-	    _error_term[row] += _weights[index];
-	    _weights[index] -= learning_rate * activations[col] * output_derivatives[row] * intermediate_gradient[row]; 
-	}
-	_error_term[row] = output_derivatives[row] * intermediate_gradient[row] * _error_term[row];
-	_bias[row] -= learning_rate * output_derivatives[row]; 
+        if (final_layer) output_derivatives[row] = f->derivative(actual_outputs[row], _outputs[row]);
+        else output_derivatives[row] = actual_outputs[row];
+        intermediate_gradient[row] = _activation_function->derivative(_intermediate[row]);
+        _error_term[row] = 0;
+        for (int col = 0; col < input_dim; col++) {
+            int index = row * input_dim + col;
+            _error_term[row] += _weights[index];
+            _weights[index] -= learning_rate * activations[col] * output_derivatives[row] * intermediate_gradient[row]; 
+        }
+        _error_term[row] = output_derivatives[row] * intermediate_gradient[row] * _error_term[row];
+        _bias[row] -= learning_rate * output_derivatives[row]; 
     }
 }
 void Layer::info(){
