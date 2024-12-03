@@ -37,8 +37,8 @@ int main(void){
 	auto t1 = std::chrono::high_resolution_clock::now();
     	a.backward(out, in, &cost, learning_rate, true);
 	auto t2 = std::chrono::high_resolution_clock::now();
-	std::chrono::duration<double> time_game_of_life = t2 - t1;
-	std::cout << "Time for Backprop step: " << time_game_of_life.count() << "s" << std::endl;
+	std::chrono::duration<double> duration = t2 - t1;
+	std::cout << "Time for Backprop: " << duration.count() << "s" << std::endl;
     	a.info();
 
         double *eval = a.getOutput();
