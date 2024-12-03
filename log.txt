@@ -1,0 +1,79 @@
+./experiment large_test.txt 3 100
+Using NN with 3 layers (including input and output layers) and 100 nodes per layer.
+Number of NN inputs: 3, Number of NN outputs: 3
+Number of Data Points: 10000
+Epoch 1, Loss: 0.0699458
+Epoch 1, Total Forward Pass Time: 0.0453106 seconds
+Epoch 1, Total Backpropagation Time: 0.0807866 seconds
+Epoch 2, Loss: 0.0200776
+Epoch 2, Total Forward Pass Time: 0.0450528 seconds
+Epoch 2, Total Backpropagation Time: 0.0804243 seconds
+Epoch 3, Loss: 0.00659044
+Epoch 3, Total Forward Pass Time: 0.0451073 seconds
+Epoch 3, Total Backpropagation Time: 0.0804195 seconds
+Epoch 4, Loss: 0.000901083
+Epoch 4, Total Forward Pass Time: 0.0449799 seconds
+Epoch 4, Total Backpropagation Time: 0.0803961 seconds
+Epoch 5, Loss: 0.000504034
+Epoch 5, Total Forward Pass Time: 0.0449522 seconds
+Epoch 5, Total Backpropagation Time: 0.0803176 seconds
+Epoch 6, Loss: 0.000469092
+Epoch 6, Total Forward Pass Time: 0.0450394 seconds
+Epoch 6, Total Backpropagation Time: 0.0804613 seconds
+Epoch 7, Loss: 0.00042824
+Epoch 7, Total Forward Pass Time: 0.0448887 seconds
+Epoch 7, Total Backpropagation Time: 0.0802799 seconds
+Epoch 8, Loss: 0.000410304
+Epoch 8, Total Forward Pass Time: 0.0450759 seconds
+Epoch 8, Total Backpropagation Time: 0.0804396 seconds
+Epoch 9, Loss: 0.000417739
+Epoch 9, Total Forward Pass Time: 0.0450374 seconds
+Epoch 9, Total Backpropagation Time: 0.080338 seconds
+Epoch 10, Loss: 0.000442805
+Epoch 10, Total Forward Pass Time: 0.045136 seconds
+Epoch 10, Total Backpropagation Time: 0.0805098 seconds
+Epoch 11, Loss: 0.000477849
+Epoch 11, Total Forward Pass Time: 0.0450212 seconds
+Epoch 11, Total Backpropagation Time: 0.080491 seconds
+Epoch 12, Loss: 0.000517888
+Epoch 12, Total Forward Pass Time: 0.045006 seconds
+Epoch 12, Total Backpropagation Time: 0.0804759 seconds
+Epoch 13, Loss: 0.00056137
+Epoch 13, Total Forward Pass Time: 0.0450674 seconds
+Epoch 13, Total Backpropagation Time: 0.0804047 seconds
+Epoch 14, Loss: 0.000607789
+Epoch 14, Total Forward Pass Time: 0.0449847 seconds
+Epoch 14, Total Backpropagation Time: 0.080354 seconds
+Epoch 15, Loss: 0.000657514
+Epoch 15, Total Forward Pass Time: 0.0450767 seconds
+Epoch 15, Total Backpropagation Time: 0.0803763 seconds
+Epoch 16, Loss: 0.000711913
+Epoch 16, Total Forward Pass Time: 0.0465565 seconds
+Epoch 16, Total Backpropagation Time: 0.0830514 seconds
+Epoch 17, Loss: 0.00077321
+Epoch 17, Total Forward Pass Time: 0.0450226 seconds
+Epoch 17, Total Backpropagation Time: 0.0804299 seconds
+Epoch 18, Loss: 0.000844735
+Epoch 18, Total Forward Pass Time: 0.0449465 seconds
+Epoch 18, Total Backpropagation Time: 0.0802739 seconds
+Epoch 19, Loss: 0.000931488
+Epoch 19, Total Forward Pass Time: 0.0449971 seconds
+Epoch 19, Total Backpropagation Time: 0.0804255 seconds
+Epoch 20, Loss: 0.00104122
+Epoch 20, Total Forward Pass Time: 0.0449924 seconds
+Epoch 20, Total Backpropagation Time: 0.0803204 seconds
+Epoch 21, Loss: 0.0011855
+Epoch 21, Total Forward Pass Time: 0.045064 seconds
+Epoch 21, Total Backpropagation Time: 0.0804752 seconds
+Epoch 22, Loss: 0.00138809
+Epoch 22, Total Forward Pass Time: 0.0449859 seconds
+Epoch 22, Total Backpropagation Time: 0.0802966 seconds
+Epoch 23, Loss: 0.00171692
+Epoch 23, Total Forward Pass Time: 0.045022 seconds
+Epoch 23, Total Backpropagation Time: 0.0802808 seconds
+Epoch 24, Loss: 0.00220359
+Epoch 24, Total Forward Pass Time: 0.0451333 seconds
+Epoch 24, Total Backpropagation Time: 0.0805896 seconds
+Epoch 25, Loss: 0.00234999
+Epoch 25, Total Forward Pass Time: 0.0450693 seconds
+Epoch 25, Total Backpropagation Time: 0.0805383 seconds
