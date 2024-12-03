@@ -17,14 +17,15 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-    if (argc < 4) {
-        cout << "Usage: " << argv[0] << " <input_file> <num_layers> <num_nodes_per_layer>" << endl;
+    if (argc < 5) {
+        cout << "Usage: " << argv[0] << " <input_file> <num_layers> <num_nodes_per_layer> <num_threads>" << endl;
         return 1;
     }
 
     string fileName = argv[1];
     int numLayers = atoi(argv[2]);
     int numNodesPerLayer = atoi(argv[3]);
+    int num_threads = atoi(argv[4]);
 
     if (numLayers < 3) {
         cout << "Note: Number of layers will be at least 3 due to implementation. Extra hidden layers will be added if greater than 3." << endl;
@@ -74,13 +75,13 @@ int main(int argc, char* argv[]) {
     NeuralNetwork nn(0.1);
 
     // Add layers to the network
-    nn.addLayer(new Layer(numInputs, numNodesPerLayer, &activationFunction));
+    nn.addLayer(new Layer(numInputs, numNodesPerLayer, &activationFunction, num_threads));
 
     for (int i = 0; i < numLayers - 3; ++i) {
-        nn.addLayer(new Layer(numNodesPerLayer, numNodesPerLayer, &activationFunction));
+        nn.addLayer(new Layer(numNodesPerLayer, numNodesPerLayer, &activationFunction, num_threads));
     }
     
-    nn.addLayer(new Layer(numNodesPerLayer, numOutputs, &activationFunction));
+    nn.addLayer(new Layer(numNodesPerLayer, numOutputs, &activationFunction, num_threads));
 
     // Train the network and log content
     ofstream logStream("log.txt");
