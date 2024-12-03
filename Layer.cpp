@@ -6,6 +6,7 @@
  */
 
 #include <cmath>
+#include <omp.h>
 #include <cstdlib>
 #include "Layer.h"
 
@@ -45,6 +46,7 @@ void Layer::backward(double* actual_outputs, double* activations, Cost_Function 
 	else output_derivatives[row] = actual_outputs[row];
 	intermediate_gradient[row] = _activation_function->derivative(_intermediate[row]);
 	_error_term[row] = 0;
+	#pragma omp parallel for num_threads(8)
 	for (int col = 0; col < input_dim; col++) {
 	    int index = row * input_dim + col;
 	    _error_term[row] += _weights[index];

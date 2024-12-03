@@ -7,6 +7,7 @@
 
 #include "Layer.h"
 #include <iostream>
+#include <chrono>
 #include "Activation_Function.h"
 
 using namespace std;
@@ -14,6 +15,7 @@ using namespace std;
 int main(void){
 	Sigmoid f;
 	SE cost;
+	clock_t start, end;
 
     // Test sigmoid evaluation
     cout << "Test sigmoid evaluation: ";
@@ -32,7 +34,11 @@ int main(void){
         std::cout << "-------" << std::endl;
         std::cout << "Iteration " << iteration << std::endl;
         a.forward(in);
+	auto t1 = std::chrono::high_resolution_clock::now();
     	a.backward(out, in, &cost, learning_rate, true);
+	auto t2 = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double> time_game_of_life = t2 - t1;
+	std::cout << "Time for Backprop step: " << time_game_of_life.count() << "s" << std::endl;
     	a.info();
 
         double *eval = a.getOutput();
