@@ -14,7 +14,7 @@ public:
     NeuralNetwork(double lr);
     void addLayer(Layer* layer);
     void forward(double* input);
-    void backward(double* actual_output, Cost_Function* cost_function);
+    void backward(double *input, double* actual_output, Cost_Function* cost_function);
     double* getOutput();
     void info();
 };

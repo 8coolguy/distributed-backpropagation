@@ -82,7 +82,7 @@ int main(int argc, char* argv[]) {
                 totalLoss += costFunction.evaluate(outputs[i][j], predicted[j]);
             }
 
-            nn.backward(outputs[i], &costFunction);
+            nn.backward(inputs[i], outputs[i], &costFunction);
         }
 
         cout << "Epoch " << epoch << ", Loss: " << totalLoss / inputs.size() << endl;

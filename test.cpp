@@ -32,7 +32,7 @@ int main(void){
         std::cout << "-------" << std::endl;
         std::cout << "Iteration " << iteration << std::endl;
         a.forward(in);
-    	a.backward(out, &cost, learning_rate);
+    	a.backward(out, in, &cost, learning_rate, true);
     	a.info();
 
         double *eval = a.getOutput();

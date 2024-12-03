@@ -52,7 +52,7 @@ int main(void) {
         loss /= output_dim;
         cout << "LOSS: " << loss << endl;
 
-        a.backward(out, &cost, learning_rate);
+        a.backward(out, in, &cost, learning_rate, true);
         a.info();
     }
 

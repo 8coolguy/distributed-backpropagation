@@ -16,6 +16,7 @@ private:
 	double *_weights;
 	double *_intermediate;
 	double *_outputs;
+	double *_error_term;
 	Activation_Function* _activation_function;
 	double *_bias;
 public:
@@ -24,8 +25,9 @@ public:
 	double *outputs;
 	Layer(int input_dim, int output_dim, Activation_Function *activation_function);
 	void forward(double* inputs);
-	void backward(double* outputs, Cost_Function *f, double learning_rate);
+	void backward(double* outputs, double *activations, Cost_Function *f, double learning_rate, bool final_layer);
 	void info();
-    double *getOutput();
+    	double *getOutput();
+    	double *get_error_term();
 };
 # endif
