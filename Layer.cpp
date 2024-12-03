@@ -45,26 +45,30 @@ void Layer::backward(double* actual_outputs, double* activations, Cost_Function 
 	    for (int i = 0; i < output_dim; i++) {
 		output_derivatives[i] = f->derivative(actual_outputs[i], _outputs[i]);
 		intermediate_gradient[i] = _activation_function->derivative(_intermediate[i]);
+		_error_term[i] = 0;
 	    }
 
 	    for (int row = 0; row < output_dim; row++) {
 		for (int col = 0; col < input_dim; col++) {
 		    int index = row * input_dim + col;
-		    _error_term[index] += output_derivatives[row] * intermediate_gradient[row] * _weights[index];
-		    _weights[index] -= learning_rate * activations[index] * output_derivatives[row] * intermediate_gradient[row]; 
+		    _error_term[row] += _weights[index];
+		    _weights[index] -= learning_rate * activations[col] * output_derivatives[row] * intermediate_gradient[row]; 
 		}
-		_bias[row] -= learning_rate * output_derivatives[row];
+		_error_term[row] = output_derivatives[row] * intermediate_gradient[row] * _error_term[row];
+		_bias[row] -= learning_rate * output_derivatives[row] * intermediate_gradient[row];
 	    }
     }else{
 	    for (int i = 0; i < output_dim; i++) {
 		intermediate_gradient[i] = _activation_function->derivative(_intermediate[i]);
+		_error_term[i] = 0;
 	    }
 	    for (int row = 0; row < output_dim; row++) {
 		for (int col = 0; col < input_dim; col++) {
 		    int index = row * input_dim + col;
-		    _error_term[index] += actual_outputs[row] * intermediate_gradient[row] * _weights[index];
-		    _weights[index] -= learning_rate * activations[index] * actual_outputs[row] * intermediate_gradient[row]; 
+		    _error_term[row] += _weights[index];
+		    _weights[index] -= learning_rate * activations[col] * actual_outputs[row] * intermediate_gradient[row]; 
 		}
+		_error_term[row] = actual_outputs[row] * intermediate_gradient[row] * _error_term[row];
 		_bias[row] -= learning_rate * actual_outputs[row] * intermediate_gradient[row];
 	    }
 

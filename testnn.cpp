@@ -18,7 +18,7 @@ int main() {
     double input[inputs] = {0.25, 0.5, 0.75};
     double expected_output[outputs] = {0.6, 0.4};
 
-    for (int epoch = 1; epoch <= 50; ++epoch) {
+    for (int epoch = 1; epoch <= 200; ++epoch) {
         std::cout << "Epoch " << epoch << ":" << std::endl;
 
         nn.forward(input);
