@@ -31,7 +31,7 @@ int main() {
         loss /= outputs;
         std::cout << "Loss: " << loss << std::endl;
 
-        nn.backward(expected_output, &cost_function);
+        nn.backward(input, expected_output, &cost_function);
         nn.info();
     }
 
