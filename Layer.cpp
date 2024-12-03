@@ -55,7 +55,7 @@ void Layer::backward(double* actual_outputs, double* activations, Cost_Function 
 		    _weights[index] -= learning_rate * activations[col] * output_derivatives[row] * intermediate_gradient[row]; 
 		}
 		_error_term[row] = output_derivatives[row] * intermediate_gradient[row] * _error_term[row];
-		_bias[row] -= learning_rate * output_derivatives[row] * intermediate_gradient[row];
+		_bias[row] -= learning_rate * output_derivatives[row]; 
 	    }
     }else{
 	    for (int i = 0; i < output_dim; i++) {
@@ -69,7 +69,7 @@ void Layer::backward(double* actual_outputs, double* activations, Cost_Function 
 		    _weights[index] -= learning_rate * activations[col] * actual_outputs[row] * intermediate_gradient[row]; 
 		}
 		_error_term[row] = actual_outputs[row] * intermediate_gradient[row] * _error_term[row];
-		_bias[row] -= learning_rate * actual_outputs[row] * intermediate_gradient[row];
+		_bias[row] -= learning_rate * actual_outputs[row];
 	    }
 
     }
