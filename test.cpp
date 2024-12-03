@@ -22,7 +22,7 @@ int main(void){
 	cout << f.evaluate(0.25) << endl;
 
     // Initialize Layer
-    Layer a(1, 1, &f);
+    Layer a(1, 1, &f, 8);
 	double in[1] = { 0.25 };
     double out[1] = { 0.625 };
 	

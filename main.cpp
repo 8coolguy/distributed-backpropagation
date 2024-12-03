@@ -18,11 +18,12 @@ using namespace std;
 
 int main(int argc, char* argv[]) {
     if (argc < 2) {
-        cout << "Usage: " << argv[0] << " <input_file>" << endl;
+        cout << "Usage: " << argv[0] << " <input_file> <num_threads>" << endl;
         return 1;
     }
 
     string fileName = argv[1];
+    int num_threads = stoi(argv[2]);
     ifstream inputFile(fileName);
 
     if (!inputFile.is_open()) {
@@ -67,8 +68,8 @@ int main(int argc, char* argv[]) {
     NeuralNetwork nn(0.1);
 
     // Add layers to the network
-    nn.addLayer(new Layer(numInputs, 5, &activationFunction));
-    nn.addLayer(new Layer(5, numOutputs, &activationFunction));
+    nn.addLayer(new Layer(numInputs, 5, &activationFunction, num_threads));
+    nn.addLayer(new Layer(5, numOutputs, &activationFunction, num_threads));
 
 
     // Train the network
@@ -94,28 +95,22 @@ int main(int argc, char* argv[]) {
     }
 
     // Test the network
-    cout << "Final outputs after training:" << endl;
+    //cout << "Final outputs after training:" << endl;
     for (size_t i = 0; i < inputs.size(); ++i) {
         nn.forward(inputs[i]);
         double* predicted = nn.getOutput();
 
-        cout << "Input: ";
+        //cout << "Input: ";
         for (int j = 0; j < numInputs; ++j) {
-            cout << inputs[i][j] << " ";
+            //cout << inputs[i][j] << " ";
         }
 
-        cout << "Predicted: ";
+        //cout << "Predicted: ";
         for (int j = 0; j < numOutputs; ++j) {
-            cout << predicted[j] << " ";
+            //cout << predicted[j] << " ";
         }
 
-        cout << "Expected: ";
+        //cout << "Expected: ";
         for (int j = 0; j < numOutputs; ++j) {
-            cout << outputs[i][j] << " ";
-        }
-
-        cout << endl;
-    }
-
-    return 0;
-}
+            //cout << outputs[i][j] << " ";
+        } /*cout << endl;*/ } return 0; }

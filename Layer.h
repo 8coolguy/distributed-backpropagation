@@ -19,11 +19,12 @@ private:
 	double *_error_term;
 	Activation_Function* _activation_function;
 	double *_bias;
+	int _num_threads;
 public:
 	int input_dim;
 	int output_dim;
 	double *outputs;
-	Layer(int input_dim, int output_dim, Activation_Function *activation_function);
+	Layer(int input_dim, int output_dim, Activation_Function *activation_function, int num_threads);
 	void forward(double* inputs);
 	void backward(double* outputs, double *activations, Cost_Function *f, double learning_rate, bool final_layer);
 	void info();

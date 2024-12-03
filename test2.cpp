@@ -17,7 +17,7 @@ int main(void) {
 
     int input_dim = 3;
     int output_dim = 2;
-    Layer a(input_dim, output_dim, &f);
+    Layer a(input_dim, output_dim, &f, 8);
 
     double in[3] = { 0.25, 0.5, 0.75 };
     double out[2] = { 0.6, 0.4 };

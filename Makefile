@@ -8,7 +8,7 @@ PROG_NN     = testnn
 PROG_GEN	= generate
 
 all:
-	$(CXX) main.cpp -o $(MAIN) Layer.cpp Neural_Network.cpp
+	$(CXX) main.cpp -o $(MAIN) Layer.cpp Neural_Network.cpp -fopenmp
 	$(CXX) test.cpp -o $(PROG) Layer.cpp -fopenmp
 	$(CXX) test2.cpp -o $(PROG_2) Layer.cpp -fopenmp
 	$(CXX) testnn.cpp -o $(PROG_NN) Layer.cpp Neural_Network.cpp -fopenmp

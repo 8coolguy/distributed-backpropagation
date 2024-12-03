@@ -10,8 +10,8 @@
 #include <cstdlib>
 #include "Layer.h"
 
-Layer::Layer(int input_dim, int output_dim, Activation_Function* activation_function)
-	:input_dim(input_dim), output_dim(output_dim), _activation_function(activation_function) {
+Layer::Layer(int input_dim, int output_dim, Activation_Function* activation_function, int num_threads)
+	:input_dim(input_dim), output_dim(output_dim), _activation_function(activation_function), _num_threads(num_threads) {
 		_weights = (double*)malloc(sizeof(double) * input_dim * output_dim);
 		_outputs = (double*)malloc(sizeof(double) * output_dim);
 		_error_term = (double*)malloc(sizeof(double) * output_dim);
@@ -41,16 +41,18 @@ void Layer::forward(double* inputs){
 void Layer::backward(double* actual_outputs, double* activations, Cost_Function *f, double learning_rate, bool final_layer){
     double output_derivatives[output_dim];
     double intermediate_gradient[output_dim];
-    #pragma omp parallel for num_threads(4)
+    #pragma omp parallel for 
     for (int row = 0; row < output_dim; row++) {
 	if (final_layer) output_derivatives[row] = f->derivative(actual_outputs[row], _outputs[row]);
 	else output_derivatives[row] = actual_outputs[row];
 	intermediate_gradient[row] = _activation_function->derivative(_intermediate[row]);
 	_error_term[row] = 0;
-	#pragma omp parallel for num_threads(8)
+	#pragma omp parallel for
 	for (int col = 0; col < input_dim; col++) {
 	    int index = row * input_dim + col;
+	    #pragma opm atomic
 	    _error_term[row] += _weights[index];
+	    #pragma opm atomic
 	    _weights[index] -= learning_rate * activations[col] * output_derivatives[row] * intermediate_gradient[row]; 
 	}
 	_error_term[row] = output_derivatives[row] * intermediate_gradient[row] * _error_term[row];

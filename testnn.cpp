@@ -9,8 +9,8 @@ int main() {
     double learning_rate = 0.1;
     NeuralNetwork nn(learning_rate);
     
-    nn.addLayer(new Layer(3, 5, &activation_function));
-    nn.addLayer(new Layer(5, 2, &activation_function));
+    nn.addLayer(new Layer(3, 5, &activation_function, 8));
+    nn.addLayer(new Layer(5, 2, &activation_function, 8));
 
     int inputs = 3;
     int outputs = 2;
