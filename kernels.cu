@@ -108,13 +108,13 @@ __global__ void parallel_backward(double * activations, double * actual_outputs,
 		intermediate_gradient[row] = sigmoid * (1 - sigmoid);
 	}
 	__syncthreads();
-	//if(col == 2) {
-		//for(int i = 0; i < input_dim; i++){
-			//int w_index = row * input_dim + i;
-			//double contribution = weights[w_index];
-			//error_term[row] += contribution;
-		//}
-	//}
+	if(col == 2) {
+		for(int i = 0; i < input_dim; i++){
+			int w_index = row * input_dim + i;
+			double contribution = weights[w_index];
+			error_term[row] += contribution;
+		}
+	}
 	weights[index] -= learning_rate * activations[col] * output_derivatives[row] * intermediate_gradient[row];
 
 	__syncthreads();
