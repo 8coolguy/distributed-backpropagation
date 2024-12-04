@@ -8,6 +8,7 @@
 #include <cmath>
 #include <cstdlib>
 #include "Layer.h"
+#include "wrapper.h"
 
 Layer::Layer(int input_dim, int output_dim, Activation_Function* activation_function)
 	:input_dim(input_dim), output_dim(output_dim), _activation_function(activation_function) {
@@ -28,14 +29,7 @@ Layer::Layer(int input_dim, int output_dim, Activation_Function* activation_func
         }
 }
 void Layer::forward(double* inputs){
-	for(int row = 0; row < output_dim; row++){
-        _intermediate[row] = _bias[row];
-		for(int col = 0; col < input_dim; col++){
-			int index = row * input_dim + col;
-			_intermediate[row] += _weights[index] * inputs[col];
-		}
-		_outputs[row] = _activation_function->evaluate(_intermediate[row]);
-	}
+	forward_wrapper(inputs, _bias, output_dim, input_dim, _intermediate, _weights, _outputs, _activation_function);
 }
 void Layer::backward(double* actual_outputs, double* activations, Cost_Function *f, double learning_rate, bool final_layer){
     double output_derivatives[output_dim];
