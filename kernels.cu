@@ -48,7 +48,7 @@ void forward_wrapper(double * input, double * bias, int output_dim, int input_di
 	double *d_input, *d_weights, *d_bias, *d_intermediate, *d_output;
 	gpuErrorCheck(cudaMalloc((void**)&d_input, input_dim * sizeof(double)));
 	gpuErrorCheck(cudaMalloc((void**)&d_weights, input_dim * output_dim * sizeof(double)));
-	gpuErrorCheck(cudaMalloc((void**)&d_bias, input_dim * sizeof(double));) 
+	gpuErrorCheck(cudaMalloc((void**)&d_bias, input_dim * sizeof(double))); 
 	gpuErrorCheck(cudaMalloc((void**)&d_intermediate, output_dim*sizeof(double)));
 	gpuErrorCheck(cudaMalloc((void**)&d_output, output_dim * sizeof(double)));
 
@@ -120,51 +120,50 @@ __global__ void parallel_backward(double * actual_outputs, double * bias, double
 	
 }
 
-void backward_wrapper(double * actual_outputs, double * bias, double * output_derivatives, double * intermediate_gradient, Cost_Function * f, int learning_rate, int input_dim, double * intermediate, double * weights, double * output, Activation_Function *activation_function, bool final_layer, double * error_term){
+void backward_wrapper(double * actual_outputs, double * bias, Cost_Function * f, int learning_rate, int input_dim, int output_dim, double * intermediate, double * weights, double * output, Activation_Function *activation_function, bool final_layer, double * error_term){
 
 	double *d_actual_outputs,*d_bias, *d_output_derivatives, *d_intermediate_gradient;
 	double *d_intermediate, *d_weights, *d_output, *d_error_term;
 
 	gpuErrorCheck(cudaMalloc((void**)&d_actual_outputs, input_dim * sizeof(double)));
-	gpuErrorCheck(cudaMalloc((void**)&d_bias, input_dim * sizeof(double));) 
+	gpuErrorCheck(cudaMalloc((void**)&d_bias, input_dim * sizeof(double))); 
 	gpuErrorCheck(cudaMalloc((void**)&d_output_derivatives, output_dim * sizeof(double)));
 	gpuErrorCheck(cudaMalloc((void**)&d_intermediate_gradient, output_dim*sizeof(double)));
 	gpuErrorCheck(cudaMalloc((void**)&d_intermediate, output_dim*sizeof(double)));
 	gpuErrorCheck(cudaMalloc((void**)&d_weights, input_dim * output_dim * sizeof(double)));
 	gpuErrorCheck(cudaMalloc((void**)&d_output, output_dim * sizeof(double)));
 	gpuErrorCheck(cudaMalloc((void**)&d_error_term, output_dim * sizeof(double)));
-	/*
-	 * Not completed yet.
-	gpuErrorCheck(cudaMemcpy(d_input, input, sizeof(double) * input_dim, cudaMemcpyHostToDevice));
+	//gpuErrorCheck(cudaMemcpy(d_input, input, sizeof(double) * input_dim, cudaMemcpyHostToDevice));
 	gpuErrorCheck(cudaMemcpy(d_actual_outputs, actual_outputs, sizeof(double) * output_dim, cudaMemcpyHostToDevice));
 	gpuErrorCheck(cudaMemcpy(d_bias, bias, sizeof(double) * output_dim, cudaMemcpyHostToDevice));
-	gpuErrorCheck(cudaMemcpy(d_output_derivatives, output_derivatives, sizeof(double) * output_dim, cudaMemcpyHostToDevice));
-	gpuErrorCheck(cudaMemcpy(d_intermediate_gradient, intermediate_gradient, sizeof(double) * output_dim, cudaMemcpyHostToDevice));
+	//gpuErrorCheck(cudaMemcpy(d_output_derivatives, output_derivatives, sizeof(double) * output_dim, cudaMemcpyHostToDevice));
+	//gpuErrorCheck(cudaMemcpy(d_intermediate_gradient, intermediate_gradient, sizeof(double) * output_dim, cudaMemcpyHostToDevice));
+	gpuErrorCheck(cudaMemcpy(d_intermediate, intermediate, sizeof(double) * output_dim, cudaMemcpyHostToDevice));
 	gpuErrorCheck(cudaMemcpy(d_weights, weights, sizeof(double) * input_dim * output_dim, cudaMemcpyHostToDevice));
 	gpuErrorCheck(cudaMemcpy(d_output, output, sizeof(double) * output_dim, cudaMemcpyHostToDevice));
 	gpuErrorCheck(cudaMemcpy(d_error_term, error_term, sizeof(double) * output_dim, cudaMemcpyHostToDevice));
 
 	dim3 block_size(32, 32);
     dim3 grid_size((output_dim - 1)/32 + 1, (input_dim - 1)/32 + 1);
-	parallel_backward<<<grid_size, block_size>>>(actual_outputs, bias, output_derivatives, intermediate_gradient, f, learning_rate, input_dim, intermediate, weights, output, activation_function, final_layer, error_term);
+	parallel_backward<<<grid_size, block_size>>>(d_actual_outputs, d_bias, d_output_derivatives, d_intermediate_gradient, f, learning_rate, input_dim, d_intermediate, d_weights, d_output, activation_function, final_layer, d_error_term);
 
 	gpuErrorCheck(cudaDeviceSynchronize());
 	gpuErrorCheck(cudaMemcpy(output, d_output, sizeof(double)  * output_dim, cudaMemcpyDeviceToHost));
 	gpuErrorCheck(cudaMemcpy(intermediate, d_intermediate, sizeof(double) * output_dim, cudaMemcpyDeviceToHost));
 
-	gpuErrorCheck(cudaMemcpy(input, d_input, sizeof(double) * input_dim, cudaMemcpyDeviceToHost));
+	//gpuErrorCheck(cudaMemcpy(input, d_input, sizeof(double) * input_dim, cudaMemcpyDeviceToHost));
 	gpuErrorCheck(cudaMemcpy(actual_outputs, d_actual_outputs, sizeof(double) * output_dim, cudaMemcpyDeviceToHost));
 	gpuErrorCheck(cudaMemcpy(bias, d_bias, sizeof(double) * output_dim, cudaMemcpyDeviceToHost));
-	gpuErrorCheck(cudaMemcpy(output_derivatives, d_output_derivatives, sizeof(double) * output_dim, cudaMemcpyDeviceToHost));
-	gpuErrorCheck(cudaMemcpy(intermediate_gradient, d_intermediate_gradient, sizeof(double) * output_dim, cudaMemcpyDeviceToHost));
+	//gpuErrorCheck(cudaMemcpy(output_derivatives, d_output_derivatives, sizeof(double) * output_dim, cudaMemcpyDeviceToHost));
+	//gpuErrorCheck(cudaMemcpy(intermediate_gradient, d_intermediate_gradient, sizeof(double) * output_dim, cudaMemcpyDeviceToHost));
+	gpuErrorCheck(cudaMemcpy(d_intermediate, intermediate, sizeof(double) * output_dim, cudaMemcpyDeviceToHost));
 	gpuErrorCheck(cudaMemcpy(weights, d_weights, sizeof(double) * input_dim * output_dim, cudaMemcpyDeviceToHost));
 	gpuErrorCheck(cudaMemcpy(output, d_output, sizeof(double) * output_dim, cudaMemcpyDeviceToHost));
 	gpuErrorCheck(cudaMemcpy(error_term, d_error_term, sizeof(double) * output_dim, cudaMemcpyDeviceToHost));
-	*/
 
 	// Free device memory
 	gpuErrorCheck(cudaFree(d_actual_outputs));
-	gpuErrorCheck(cudaFree(d_bias);) 
+	gpuErrorCheck(cudaFree(d_bias)); 
 	gpuErrorCheck(cudaFree(d_output_derivatives));
 	gpuErrorCheck(cudaFree(d_intermediate_gradient));
 	gpuErrorCheck(cudaFree(d_intermediate));
