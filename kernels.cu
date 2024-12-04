@@ -104,13 +104,13 @@ __global__ void parallel_backward(double * actual_outputs, double * bias, double
 		if(final_layer) output_derivatives[row] = f->derivative(actual_outputs[row], output[row]);
 		else output_derivatives[row] = actual_outputs[row];
 	}
-	if (col == 1) intermediate_gradient[row] = _activation_function->derivative(_intermediate[row]);
+	if (col == 1) intermediate_gradient[row] = activation_function->derivative(intermediate[row]);
 	if (col == 2) error_term[row] = 0;
 	__syncthreads();
 
 
-	//This reduction here may lead to non-deterministic behavior
-	error_term[row] += weights[index];
+	//This reduction will no longer lead to non-deterministic behavior
+	atomicAdd((float *) &error_term[row], (float) weights[index]);
 
 	weights[index] -= learning_rate * weights[index] * output_derivatives[row] * intermediate_gradient[row];
 
@@ -118,4 +118,43 @@ __global__ void parallel_backward(double * actual_outputs, double * bias, double
 	if (col == 1) bias[row] -= learning_rate * output_derivatives[row] * intermediate_gradient[row];
 	__syncthreads();
 	
+}
+
+void backward_wrapper(double * actual_outputs, double * bias, double * output_derivatives, double * intermediate_gradient, Cost_Function * f, int learning_rate, int input_dim, double * intermediate, double * weights, double * output, Activation_Function *activation_function, bool final_layer, double * error_term){
+
+	double *d_actual_outputs,*d_bias, *d_output_derivatives, *d_intermediate_gradient;
+	double *d_intermediate, *d_weights, *d_output, *d_error_term;
+	cudaMalloc((void**)&d_actual_outputs, input_dim * sizeof(double));
+	cudaMalloc((void**)&d_bias, input_dim * sizeof(double)); 
+	cudaMalloc((void**)&d_output_derivatives, output_dim * sizeof(double));
+	cudaMalloc((void**)&d_intermediate_gradient, output_dim*sizeof(double));
+	cudaMalloc((void**)&d_intermediate, output_dim*sizeof(double));
+	cudaMalloc((void**)&d_weights, input_dim * output_dim * sizeof(double));
+	cudaMalloc((void**)&d_output, output_dim * sizeof(double));
+	cudaMalloc((void**)&d_error_term, output_dim * sizeof(double));
+	/*
+	 * Not completed yet.
+	cudaMemcpy(d_input, input, sizeof(double) * input_dim, cudaMemcpyHostToDevice);
+	cudaMemcpy(d_weights, weights, sizeof(double) * input_dim * output_dim, cudaMemcpyHostToDevice);
+	cudaMemcpy(d_intermediate, bias, sizeof(double) * output_dim, cudaMemcpyHostToDevice);
+
+	dim3 block_size(32, 32);
+    dim3 grid_size((output_dim - 1)/32 + 1, (input_dim - 1)/32 + 1);
+	parallel_backward<<<grid_size, block_size>>>(d_input, d_bias, output_dim, input_dim, d_intermediate, d_weights, d_output, activation_function);
+
+	cudaDeviceSynchronize();
+	cudaMemcpy(output, d_output, sizeof(double)  * output_dim, cudaMemcpyDeviceToHost);
+	cudaMemcpy(intermediate, d_intermediate, sizeof(double) * output_dim, cudaMemcpyDeviceToHost);
+	*/
+
+	// Free device memory
+	cudaFree(d_actual_outputs);
+	cudaFree(d_bias); 
+	cudaFree(d_output_derivatives);
+	cudaFree(d_intermediate_gradient);
+	cudaFree(d_intermediate);
+	cudaFree(d_weights);
+	cudaFree(d_output);
+	cudaFree(d_error_term);
+
 }
