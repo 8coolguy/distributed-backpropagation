@@ -140,8 +140,8 @@ void backward_wrapper(double * actual_outputs, double * bias, Cost_Function * f,
 	gpuErrorCheck(cudaMalloc((void**)&d_error_term, output_dim * sizeof(double)));
 
 	//gpuErrorCheck(cudaMemcpy(d_input, input, sizeof(double) * input_dim, cudaMemcpyHostToDevice));
-	gpuErrorCheck(cudaMemcpy(d_actual_outputs, actual_outputs, sizeof(double) * output_dim, cudaMemcpyHostToDevice));
-	gpuErrorCheck(cudaMemcpy(d_bias, bias, sizeof(double) * output_dim, cudaMemcpyHostToDevice));
+	gpuErrorCheck(cudaMemcpy(d_actual_outputs, actual_outputs, sizeof(double) * input_dim, cudaMemcpyHostToDevice));
+	gpuErrorCheck(cudaMemcpy(d_bias, bias, sizeof(double) * input_dim, cudaMemcpyHostToDevice));
 	//gpuErrorCheck(cudaMemcpy(d_output_derivatives, output_derivatives, sizeof(double) * output_dim, cudaMemcpyHostToDevice));
 	//gpuErrorCheck(cudaMemcpy(d_intermediate_gradient, intermediate_gradient, sizeof(double) * output_dim, cudaMemcpyHostToDevice));
 	gpuErrorCheck(cudaMemcpy(d_intermediate, intermediate, sizeof(double) * output_dim, cudaMemcpyHostToDevice));
@@ -156,8 +156,8 @@ void backward_wrapper(double * actual_outputs, double * bias, Cost_Function * f,
 	gpuErrorCheck(cudaDeviceSynchronize());
 
 	//gpuErrorCheck(cudaMemcpy(input, d_input, sizeof(double) * input_dim, cudaMemcpyDeviceToHost));
-	gpuErrorCheck(cudaMemcpy(actual_outputs, d_actual_outputs, sizeof(double) * output_dim, cudaMemcpyDeviceToHost));
-	gpuErrorCheck(cudaMemcpy(bias, d_bias, sizeof(double) * output_dim, cudaMemcpyDeviceToHost));
+	gpuErrorCheck(cudaMemcpy(actual_outputs, d_actual_outputs, sizeof(double) * input_dim, cudaMemcpyDeviceToHost));
+	gpuErrorCheck(cudaMemcpy(bias, d_bias, sizeof(double) * input_dim, cudaMemcpyDeviceToHost));
 	//gpuErrorCheck(cudaMemcpy(output_derivatives, d_output_derivatives, sizeof(double) * output_dim, cudaMemcpyDeviceToHost));
 	//gpuErrorCheck(cudaMemcpy(intermediate_gradient, d_intermediate_gradient, sizeof(double) * output_dim, cudaMemcpyDeviceToHost));
 	gpuErrorCheck(cudaMemcpy(intermediate, d_intermediate, sizeof(double) * output_dim, cudaMemcpyDeviceToHost));
