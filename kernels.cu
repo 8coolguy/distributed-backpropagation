@@ -33,8 +33,7 @@ __global__ void parallel_forward(double * inputs, double * bias, int output_dim,
 	if(row >= output_dim) return;
 	if(col >= input_dim) return;
 
-	int index = row * input_dim + col;
-	//printf("%d %f \t\n", index, weights[index]);
+	//int index = row * input_dim + col;
 	if(col == 0) {
 		intermediate[row] = bias[row];
 		for(int i = 0; i < input_dim; i++){
