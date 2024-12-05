@@ -6,26 +6,40 @@
  */
 
 #include <cmath>
+#include <cuda.h>
 #include <cstdlib>
 #include "Layer.h"
 #include "wrapper.h"
 
 Layer::Layer(int input_dim, int output_dim, Activation_Function* activation_function)
 	:input_dim(input_dim), output_dim(output_dim), _activation_function(activation_function) {
-		_weights = (double*)malloc(sizeof(double) * input_dim * output_dim);
-		_outputs = (double*)malloc(sizeof(double) * output_dim);
-		_error_term = (double*)malloc(sizeof(double) * output_dim);
-		_intermediate = (double*)malloc(sizeof(double) * output_dim);
-        	_bias = (double*)malloc(sizeof(double) * output_dim);
+		cudaMalloc(_weights, sizeof(double) * input_dim * output_dim);
+		cudaMalloc(_outputs, sizeof(double) * output_dim);
+		cudaMalloc(_error_term, sizeof(double) * output_dim);
+		cudaMalloc(_intermediate, sizeof(double) * output_dim);
+        	cudaMalloc(_bias, sizeof(double) * output_dim);
+
+		double * weights = malloc(sizeof(double) * input_dim * output_dim);
+		double * output = malloc(sizeof(double) * output_dim);
+		double * intermediate = malloc(sizeof(double) * output_dim);
+		double * bias = malloc(sizeof(double) * output_dim);
         
 		for(int i = 0; i < input_dim * output_dim; i++){
-			_weights[i] = (rand() % 100) / 100.0;
+			weights[i] = (rand() % 100) / 100.0;
 		}
+		cudaMemcpy(_weights, weights, sizeof(double) * input_dim * output_dim, cudaMemcpyHostToDevice);
         
 		for(int i = 0; i < output_dim; i++){
 			_outputs[i] = 0.0;
 			_intermediate[i] = 0.0;
     		_bias[i] = 0.0;
+		cudaMemcpy(_intermediate, intermediate, sizeof(double) * output_dim, cudaMemcpyHostToDevice);
+		cudaMemcpy(_output, output, sizeof(double) * output_dim, cudaMemcpyHostToDevice);
+		cudaMemcpy(_bias, bias, sizeof(double) * output_dim, cudaMemcpyHostToDevice);
+		free(intermediate);
+		free(bias);
+		free(output);
+		free(weights);
         }
 }
 void Layer::forward(double* inputs){
