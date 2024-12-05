@@ -29,5 +29,6 @@ public:
 	void info();
     	double *getOutput();
     	double *get_error_term();
+	double *getKernelOutput();
 };
 # endif

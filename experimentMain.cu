@@ -89,6 +89,11 @@ int main(int argc, char* argv[]) {
     logStream << "Using NN with " << numLayers << " layers (including input and output layers) and " << numNodesPerLayer << " nodes per layer." << endl;
     logStream << "Number of NN inputs: " << numInputs << ", Number of NN outputs: " << numOutputs << endl;
     logStream << "Number of Data Points: " << inputs.size() << endl;
+
+    double * d_input, * d_actual_output;
+    cudaMalloc((void**)&d_input, numInputs * sizeof(double));
+    cudaMalloc((void**)&d_actual_output, numOutputs * sizeof(double));
+
     
     int epochs = 25;
     for (int epoch = 1; epoch <= epochs; ++epoch) {
@@ -98,8 +103,10 @@ int main(int argc, char* argv[]) {
         double totalBackward = 0.0;
 
         for (size_t i = 0; i < inputs.size(); ++i) {
+	    cudaMemcpy(d_input, inputs[i], sizeof(double) * numInputs , cudaMemcpyHostToDevice);
+	    cudaMemcpy(d_actual_output, outputs[i], sizeof(double) * numOutputs , cudaMemcpyHostToDevice);
             auto start = chrono::high_resolution_clock::now();
-            nn.forward(inputs[i]);
+            nn.forward(d_input);
             auto end = chrono::high_resolution_clock::now();
 
             chrono::duration<double> elapsed = end - start;
@@ -112,7 +119,7 @@ int main(int argc, char* argv[]) {
             }
 
             start = chrono::high_resolution_clock::now();
-            nn.backward(inputs[i], outputs[i], &costFunction);
+            nn.backward(d_input, d_actual_output, &costFunction);
             end = chrono::high_resolution_clock::now();
 
             elapsed = end - start;
@@ -124,6 +131,8 @@ int main(int argc, char* argv[]) {
         logStream << "Epoch " << epoch << ", Total Backpropagation Time: " << totalBackward << " seconds" << endl;
         cout << "Epoch " << epoch << ", Loss: " << totalLoss / inputs.size() << endl;
     }
+    cudaFree(d_input);
+    cudaFree(d_actual_output);
 
     // Test the network
     // cout << "Final outputs after training:" << endl;

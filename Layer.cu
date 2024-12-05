@@ -84,6 +84,9 @@ double *Layer::getOutput() {
     cudaMemcpy(outputs, _outputs, sizeof(double) * output_dim, cudaMemcpyDeviceToHost);
     return outputs ;
 }
+double *Layer::getKernelOutput(){
+	return _outputs;
+}
 double *Layer::get_error_term() {
     return _error_term;
 }

@@ -32,8 +32,9 @@ __global__ void parallel_forward(double * inputs, double * bias, int output_dim,
 	int col = threadIdx.y + (blockDim.y * blockIdx.y);	
 	if(row >= output_dim) return;
 	if(col >= input_dim) return;
+	int index = row * input_dim + col;
+	//printf("Kernel Inputs %d %f %f \t\n", col , inputs[col], weights[index]);
 
-	//int index = row * input_dim + col;
 	if(col == 0) {
 		intermediate[row] = bias[row];
 		for(int i = 0; i < input_dim; i++){
@@ -41,22 +42,18 @@ __global__ void parallel_forward(double * inputs, double * bias, int output_dim,
 			double contribution = weights[w_index] *  inputs[i];
 			intermediate[row] += contribution;
 		}
-	}
-	//atomicAdd((float*) &intermediate[row], (float)(weights[index] * inputs[col]));
-	__syncthreads();
-	if(col == 0)
 		outputs[row] = 1.0 / (1.0 + exp(-1 * intermediate[row]));
+		//printf("Kernel Inputs %f \t\n", outputs[row]);
+	}
 }
 void forward_wrapper(double * input, double * bias, int output_dim, int input_dim, double * intermediate, double * weights, double * output, Activation_Function *activation_function){
-	double *d_input;
-	cudaMalloc((void**)&d_input, input_dim * sizeof(double));
-	cudaMemcpy(d_input, input, sizeof(double) * input_dim, cudaMemcpyHostToDevice);
 
 	dim3 block_size(32, 32);
     	dim3 grid_size((output_dim - 1)/32 + 1, (input_dim - 1)/32 + 1);
-	parallel_forward<<<grid_size, block_size>>>(d_input, bias, output_dim, input_dim, intermediate, weights, output, activation_function);
+	parallel_forward<<<grid_size, block_size>>>(input, bias, output_dim, input_dim, intermediate, weights, output, activation_function);
 
 	cudaDeviceSynchronize();
+	gpuErrorCheck(cudaGetLastError());	
 
 }
 /*
@@ -64,7 +61,6 @@ void forward_wrapper(double * input, double * bias, int output_dim, int input_di
 * Backpropagation Step
 *
 */
-
 __global__ void parallel_backward(double * activations, double * actual_outputs, double * bias, Cost_Function * f, double learning_rate, int output_dim, int input_dim, double * intermediate, double * weights, double * output, Activation_Function *activation_function, bool final_layer, double * error_term)
 {
 	int row = threadIdx.x + blockDim.x * blockIdx.x;	
@@ -76,6 +72,7 @@ __global__ void parallel_backward(double * activations, double * actual_outputs,
 	__shared__ double ig[32];
 	
 	int index = row * input_dim + col;	
+	//printf("Backprop stuff %d %d %f \t\n", final_layer, index, actual_outputs[row]);
 
 	if (col == 0){
 		if(final_layer) od[threadIdx.x] = 2 * (output[row] - actual_outputs[row]);
@@ -95,30 +92,14 @@ __global__ void parallel_backward(double * activations, double * actual_outputs,
 	}
 	__syncthreads();
 	weights[index] -= learning_rate * activations[col] * od[threadIdx.x] * ig[threadIdx.x];
-	//printf("%d %d %f \t\n", final_layer, index, weights[index]);
 	if (col == 0) error_term[row] = od[threadIdx.x] * ig[threadIdx.x] * error_term[row];
 	if (col == 1) bias[row] -= learning_rate * od[threadIdx.x] * ig[threadIdx.x];
 	
 }
 void backward_wrapper(double * activations, double * actual_outputs, double * bias, Cost_Function * f, double learning_rate, int output_dim, int input_dim, double * intermediate, double * weights, double * output, Activation_Function *activation_function, bool final_layer, double * error_term){
-	double *d_activations,*d_actual_outputs;
-
-	//inputs
-	cudaMalloc((void**)&d_activations, input_dim * sizeof(double));
-	cudaMalloc((void**)&d_actual_outputs, output_dim* sizeof(double));
-
-	cudaMemcpy(d_activations, activations, sizeof(double) * input_dim, cudaMemcpyHostToDevice);
-	if(final_layer) cudaMemcpy(d_actual_outputs, actual_outputs, sizeof(double) * output_dim, cudaMemcpyHostToDevice);
-	else d_actual_outputs = actual_outputs;
-
-
 	dim3 block_size(32, 32);
     	dim3 grid_size((output_dim - 1)/32 + 1, (input_dim - 1)/32 + 1);
-	parallel_backward<<<grid_size, block_size>>>(d_activations, d_actual_outputs, bias, f, learning_rate, output_dim, input_dim, intermediate, weights, output, activation_function, final_layer, error_term);
+	parallel_backward<<<grid_size, block_size>>>(activations, actual_outputs, bias, f, learning_rate, output_dim, input_dim, intermediate, weights, output, activation_function, final_layer, error_term);
+	gpuErrorCheck(cudaGetLastError());	
 	cudaDeviceSynchronize();
-	gpuErrorCheck(cudaGetLastError());
-
-	// Free device memory
-    	cudaFree(d_activations);
-    	cudaFree(d_actual_outputs);
 }

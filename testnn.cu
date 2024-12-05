@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cuda.h>
 #include "Neural_Network.h"
 #include "Activation_Function.h"
 

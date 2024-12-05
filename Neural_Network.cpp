@@ -11,7 +11,7 @@ void NeuralNetwork::forward(double* input) {
     double* current_input = input;
     for (auto& layer : layers) {
         layer->forward(current_input);
-        current_input = layer->getOutput();
+        current_input = layer->getKernelOutput();
     }
 }
 
@@ -21,7 +21,7 @@ void NeuralNetwork::backward(double* input, double* actual_output, Cost_Function
 
     for (int i = layers.size() - 1; i >= 0; i--) {
 	if (i == 0) activations = input;
-	else activations = layers[i - 1]->getOutput();
+	else activations = layers[i - 1]->getKernelOutput();
         if (i == layers.size() - 1) layers[i]->backward(current_gradients, activations, cost_function, learning_rate, true);
 	else layers[i]->backward(current_gradients, activations, cost_function, learning_rate, false );
         current_gradients = layers[i]->get_error_term();
