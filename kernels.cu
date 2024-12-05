@@ -94,7 +94,7 @@ void forward_wrapper(double * input, double * bias, int output_dim, int input_di
 //    }
 //}
 
-__global__ void parallel_backward(double * actual_outputs, double * bias, double * output_derivatives, double * intermediate_gradient, Cost_Function * f, int learning_rate, int input_dim, double * intermediate, double * weights, double * output, Activation_Function *activation_function, bool final_layer, double * error_term)
+__global__ void parallel_backward(double * actual_outputs, double * bias, double * output_derivatives, double * intermediate_gradient, Cost_Function * f, double learning_rate, int input_dim, double * intermediate, double * weights, double * output, Activation_Function *activation_function, bool final_layer, double * error_term)
 {
 	int row = threadIdx.x + blockDim.x * blockIdx.x;	
 	int col = threadIdx.y + blockDim.y * blockIdx.y;	
@@ -125,7 +125,7 @@ __global__ void parallel_backward(double * actual_outputs, double * bias, double
 	
 }
 
-void backward_wrapper(double * actual_outputs, double * bias, Cost_Function * f, int learning_rate, int input_dim, int output_dim, double * intermediate, double * weights, double * output, Activation_Function *activation_function, bool final_layer, double * error_term){
+void backward_wrapper(double * actual_outputs, double * bias, Cost_Function * f, double learning_rate, int input_dim, int output_dim, double * intermediate, double * weights, double * output, Activation_Function *activation_function, bool final_layer, double * error_term){
 
 	double *d_actual_outputs,*d_bias, *d_output_derivatives, *d_intermediate_gradient;
 	double *d_intermediate, *d_weights, *d_output, *d_error_term;
