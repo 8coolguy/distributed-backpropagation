@@ -8,6 +8,8 @@
 #include "Activation_Function.h"
 #include "wrapper.h"
 
+#define BLOCKS 32
+
 inline void gpuAssert(cudaError_t code, const char *file, int line, bool abort = true)
 {
     if (code != cudaSuccess)
@@ -29,13 +31,7 @@ inline void gpuAssert(cudaError_t code, const char *file, int line, bool abort =
 __global__ void parallel_forward(double * inputs, double * bias, int output_dim, int input_dim, double * intermediate, double * weights, double * outputs, Activation_Function *activation_function)
 {
 	int row = threadIdx.x + (blockDim.x * blockIdx.x);	
-	int col = threadIdx.y + (blockDim.y * blockIdx.y);	
-	if(row >= output_dim) return;
-	if(col >= input_dim) return;
-	int index = row * input_dim + col;
-	//printf("Kernel Inputs %d %f %f \t\n", col , inputs[col], weights[index]);
-
-	if(col == 0) {
+	if(row < output_dim) {
 		intermediate[row] = bias[row];
 		for(int i = 0; i < input_dim; i++){
 			int w_index = row * input_dim + i;
@@ -43,13 +39,12 @@ __global__ void parallel_forward(double * inputs, double * bias, int output_dim,
 			intermediate[row] += contribution;
 		}
 		outputs[row] = 1.0 / (1.0 + exp(-1 * intermediate[row]));
-		//printf("Kernel Inputs %f \t\n", outputs[row]);
 	}
 }
 void forward_wrapper(double * input, double * bias, int output_dim, int input_dim, double * intermediate, double * weights, double * output, Activation_Function *activation_function){
 
-	dim3 block_size(32, 32);
-    	dim3 grid_size((output_dim - 1)/32 + 1, (input_dim - 1)/32 + 1);
+	dim3 block_size(BLOCKS, 1);
+    	dim3 grid_size((output_dim - 1)/BLOCKS + 1, 1);
 	parallel_forward<<<grid_size, block_size>>>(input, bias, output_dim, input_dim, intermediate, weights, output, activation_function);
 
 	cudaDeviceSynchronize();
@@ -68,11 +63,10 @@ __global__ void parallel_backward(double * activations, double * actual_outputs,
 	if(row >= output_dim) return;
 	if(col >= input_dim) return;
 
-	__shared__ double od[32];
-	__shared__ double ig[32];
+	__shared__ double od[BLOCKS];
+	__shared__ double ig[BLOCKS];
 	
 	int index = row * input_dim + col;	
-	//printf("Backprop stuff %d %d %f \t\n", final_layer, index, actual_outputs[row]);
 
 	if (col == 0){
 		if(final_layer) od[threadIdx.x] = 2 * (output[row] - actual_outputs[row]);
@@ -97,8 +91,8 @@ __global__ void parallel_backward(double * activations, double * actual_outputs,
 	
 }
 void backward_wrapper(double * activations, double * actual_outputs, double * bias, Cost_Function * f, double learning_rate, int output_dim, int input_dim, double * intermediate, double * weights, double * output, Activation_Function *activation_function, bool final_layer, double * error_term){
-	dim3 block_size(32, 32);
-    	dim3 grid_size((output_dim - 1)/32 + 1, (input_dim - 1)/32 + 1);
+	dim3 block_size(BLOCKS, BLOCKS);
+    	dim3 grid_size((output_dim - 1)/BLOCKS + 1, (input_dim - 1)/BLOCKS + 1);
 	parallel_backward<<<grid_size, block_size>>>(activations, actual_outputs, bias, f, learning_rate, output_dim, input_dim, intermediate, weights, output, activation_function, final_layer, error_term);
 	gpuErrorCheck(cudaGetLastError());	
 	cudaDeviceSynchronize();

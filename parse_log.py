@@ -1,7 +1,8 @@
+from statistics import mean
 import re
 import csv
 
-log_file_path = ".\log.txt"
+log_file_path = "log.txt"
 output_csv_path = "parsed_log.csv"
 
 epochs = []
@@ -33,5 +34,5 @@ with open(output_csv_path, mode="w", newline="") as csvfile:
     csv_writer.writerow(["Epoch", "Loss", "Forward Pass Time", "Backprop Time"])
     for epoch, loss, forward, backprop in zip(epochs, losses, forward_times, backprop_times):
         csv_writer.writerow([epoch, loss, forward, backprop])
-
+print(f"Average Forward {mean(forward_times)}, Average Backward {mean(backprop_times)}")
 print(f"Parsed data saved to {output_csv_path}")
