@@ -75,10 +75,10 @@ int main(int argc, char* argv[]) {
     NeuralNetwork nn(0.1);
 
     // Add layers to the network
-    nn.addLayer(new Layer(numInputs, numNodesPerLayer, &reluActivation));
+    nn.addLayer(new Layer(numInputs, numNodesPerLayer, &sigmoidActivation));
 
     for (int i = 0; i < numLayers - 3; ++i) {
-        nn.addLayer(new Layer(numNodesPerLayer, numNodesPerLayer, &reluActivation));
+        nn.addLayer(new Layer(numNodesPerLayer, numNodesPerLayer, &sigmoidActivation));
     }
     
     nn.addLayer(new Layer(numNodesPerLayer, numOutputs, &sigmoidActivation));
