@@ -43,7 +43,7 @@ void Layer::backward(double* actual_outputs, double* activations, Cost_Function 
     double output_derivatives[output_dim];
     double intermediate_gradient[output_dim];
     
-    #pragma omp parallel for num_threads(_num_threads)
+    #pragma omp simd 
     for (int row = 0; row < output_dim; row++) {
         if (final_layer) output_derivatives[row] = f->derivative(actual_outputs[row], _outputs[row]);
         else output_derivatives[row] = actual_outputs[row];
