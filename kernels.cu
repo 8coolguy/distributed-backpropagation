@@ -68,11 +68,11 @@ __global__ void parallel_backward(double * activations, double * actual_outputs,
 	
 	int index = row * input_dim + col;	
 
-	if (col == 0){
+	if (threadIdx.y == 0){
 		if(final_layer) od[threadIdx.x] = 2 * (output[row] - actual_outputs[row]);
 		else od[threadIdx.x] = actual_outputs[row];
 	}
-	if(col == 1){
+	if(threadIdx.y == 1){
 		double sigmoid = 1/(1+ exp(-1 * intermediate[row]));
 		ig[threadIdx.x] = sigmoid * (1 - sigmoid);
 	}
