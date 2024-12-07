@@ -3,7 +3,7 @@
 ## Steps   
 1. Create serial backpropagtion.
 
-2. Distrubute onto many nodes in the WAVE center.
+2. Use OpenMP for CPU parallelism. 
 
 3. Use CUDA to improve calculation on each node.   
 
@@ -21,7 +21,9 @@ Created a Layer class that will store the weights from layer i of size n to laye
 
 3. Run "./main <file_name>" to train a neural network on the sample dataset or a given input file.
 
-The Makefile also compiles test programs which can be run "./test", "./test2", and "./testnn" to test the layer program and neural network program.
+4. Run "./experiment large_test.txt <num_layers> <num_nodes_per_layer> to train a neural network on the sample dataset or a given input file.
+
+The Makefile also compiles test programs which can be run "./test", "./test2", and "./testnn" to test the layer program and neural network program. 
 
 The input file structure starts with the number of inputs and outputs and then the data points, ex:
 ```
