@@ -1,0 +1,16 @@
+./experiment large_test.txt 5 100
+Using NN with 5 layers (including input and output layers) and 100 nodes per layer.
+Number of NN inputs: 3, Number of NN outputs: 3
+Number of Data Points: 10000
+Epoch 1, Loss: 0.672069
+Epoch 1, Total Forward Pass Time: 0.784567 seconds
+Epoch 1, Total Backpropagation Time: 1.23379 seconds
+Epoch 2, Loss: 0.672069
+Epoch 2, Total Forward Pass Time: 0.788724 seconds
+Epoch 2, Total Backpropagation Time: 1.24045 seconds
+Epoch 3, Loss: 0.672069
+Epoch 3, Total Forward Pass Time: 0.784113 seconds
+Epoch 3, Total Backpropagation Time: 1.23276 seconds
+Epoch 4, Loss: 0.672069
+Epoch 4, Total Forward Pass Time: 0.783894 seconds
+Epoch 4, Total Backpropagation Time: 1.2324 seconds
